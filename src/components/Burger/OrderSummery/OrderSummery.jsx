@@ -1,5 +1,5 @@
 import React from 'react';
-import Aux from './../../../Auxillary/AuxHoc'
+import Aux from './../../../hoc/AuxHoc'
 import Button from "../../UI/Button/Button";
 
 const orderSummery = (props) => {
