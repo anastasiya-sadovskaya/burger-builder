@@ -9,6 +9,7 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 import errorHandling from "../../hoc/errorHandling/errorHandling";
 import AuxHoc from "../../hoc/AuxHoc";
 import Button from "../../components/UI/Button/Button";
+import {withRouter} from "react-router-dom";
 
 
 class BurgerBuilder extends Component {
@@ -92,18 +93,19 @@ class BurgerBuilder extends Component {
     }
 
     acceptPurchase = () => {
-        this.setState({loading: true})
 
-        const order = {
-            ingredients: this.state.ingredients,
-            totalPrice: this.state.totalPrice,
-            customer: {
-                name: 'Nastya',
-                address: 'Kuprevicha 3V',
-                phoneNumber: '1234567'
-            }
+        console.log(this.props);
+        const queryParams = [];
+        queryParams.push('price=' + this.state.totalPrice);
+        for (let i in this.state.ingredients){
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
         }
-        instance.post('/orders.json', order).then(resp => this.setState({ purchasing: false, loading: false })).catch(er => console.log(er));
+        this.props.history.push(
+            {
+                pathname: '/checkout',
+                search: '?' + queryParams.join('&')
+            }
+        );
     }
 
     cancelPurchase = () => {

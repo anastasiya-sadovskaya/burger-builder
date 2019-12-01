@@ -1,0 +1,14 @@
+.Order{
+  margin: 5px;
+  padding: 5px;
+  width: 50%;
+  border: 1px solid #999;
+  box-shadow: 5px 5px 5px #ccc ;
+
+  .Ingredient{
+    border: 1px solid #ddd;
+    margin: 5px;
+    padding: 5px;
+    background-color: #eee;
+  }
+}
