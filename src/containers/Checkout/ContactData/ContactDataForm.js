@@ -21,7 +21,8 @@ class ContactData extends Component {
                 validationRules: {
                     required: true
                 },
-                valid: false
+                valid: false,
+                touched: false
             },
             email: {
                 elementType: 'input',
@@ -33,7 +34,8 @@ class ContactData extends Component {
                 validationRules: {
                     required: true
                 },
-                valid: false
+                valid: false,
+                touched: false
             },
             street: {
                 elementType: 'input',
@@ -47,7 +49,8 @@ class ContactData extends Component {
                     minLength: 5,
                     maxLength: 5,
                 },
-                valid: false
+                valid: false,
+                touched: false
             },
             building: {
                 elementType: 'input',
@@ -59,7 +62,8 @@ class ContactData extends Component {
                 validationRules: {
                     required: true
                 },
-                valid: false
+                valid: true,
+                touched: false
             },
             deliveryMethod: {
                 elementType: 'select',
@@ -72,6 +76,7 @@ class ContactData extends Component {
                 }
             },
         },
+        formValid: false,
         loading: false,
         error: false
 
@@ -123,13 +128,20 @@ class ContactData extends Component {
             ...this.state.orderForm,
             [input]: {
                 ...this.state.orderForm[input],
+                touched: true,
                 elementConfig: {
                     ...this.state.orderForm[input].elementConfig ,
                     value: event.target.value
                 },
-                valid: this.validate(event.target.value, this.state.orderForm[input].validationRules )
+                valid: this.state.orderForm[input].validationRules ?this.validate(event.target.value, this.state.orderForm[input].validationRules) :true
             }
         }
+
+        let formIsValid = true;
+        for ( let i in updatedOrderForm){
+            formIsValid = updatedOrderForm[i].valid && formIsValid;
+        }
+
 
         // const updatedOrderForm = {
         //     ...this.state.orderForm
@@ -149,9 +161,23 @@ class ContactData extends Component {
         // this.validate(updatedElementConfig.value, updatedElement.validationRules )
         // updatedOrderForm[input] = updatedElement;
         this.setState({
+            orderForm: updatedOrderForm,
+            formValid: formIsValid
+        })
+    }
+
+    onInputBlur = (event, input) => {
+        const updatedOrderForm = {
+            ...this.state.orderForm,
+            [input]: {
+                ...this.state.orderForm[input],
+                touched: true,}
+        };
+        this.setState({
             orderForm: updatedOrderForm
         })
     }
+
 
     render(){
         const inputElements = [];
@@ -176,20 +202,22 @@ class ContactData extends Component {
                                             inputtype={el.config.elementType}
                                             elementConfig={el.config.elementConfig}
                                             onChangeHandler={(event) => this.onInputChange(event, el.id)}
+                                            invalid={!el.config.valid}
+                                            shouldValidate={el.config.validationRules}
+                                            touched={el.config.touched}
+                                            onBlurHandler={e => this.onInputBlur(e, el.id)}
                                         />
                                     ))
                                 }
 
 
-                                <Button type='Success' onClickHandler={this.orderHandler} > Order </Button>
+                                <Button type='Success' disabled={!this.state.formValid} onClickHandler={this.orderHandler} > Order </Button>
                             </form>
-
                 }
 
             </div>
         )
     }
 }
-
 
 export default errorHandling(ContactData, instance);
