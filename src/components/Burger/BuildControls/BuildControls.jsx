@@ -20,8 +20,8 @@ const buildControls = (props) => {
                         key={el.type}
                         type={el.type}
                         label={el.label}
-                        added={props.onAddClick}
-                        removed={props.onRemoveClick}
+                        added={() => props.onAddClick(el.type)}
+                        removed={() => props.onRemoveClick(el.type)}
                         disabled={props.disabledControls[el.type]}/>
                 ))
             }

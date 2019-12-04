@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Button from "../../../components/UI/Button/Button";
 
 import instance from '../../../axios-orders'
@@ -62,7 +63,7 @@ class ContactData extends Component {
                 validationRules: {
                     required: true
                 },
-                valid: true,
+                valid: false,
                 touched: false
             },
             deliveryMethod: {
@@ -73,7 +74,8 @@ class ContactData extends Component {
                         {value: 'cheapest', displayValue: 'Cheapest'}
                     ],
                     value: 'fastest'
-                }
+                },
+                valid: true
             },
         },
         formValid: false,
@@ -94,7 +96,7 @@ class ContactData extends Component {
         const order = {
             ingredients: this.props.ingredients,
             formData: formData,
-            price: this.props.price
+            totalPrice: this.props.totalPrice
         }
         instance.post('/orders.json', order)
             .then(resp => {
@@ -220,4 +222,11 @@ class ContactData extends Component {
     }
 }
 
-export default errorHandling(ContactData, instance);
+const mapStateToProps = state => {
+    return {
+        ingredients: state.ingredients,
+        totalPrice: state.totalPrice
+    }
+}
+
+export default connect(mapStateToProps)(errorHandling(ContactData, instance));

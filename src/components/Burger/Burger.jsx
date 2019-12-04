@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import BurgerIngredient from "./BurgerIngridients/BurgerIngredient";
 
 import classes from './Burger.module.scss'
+import { connect } from 'react-redux';
 
 const burger = (props) => {
     let ingredientsArr = Object.keys(props.ingredients).map( igKey => {
@@ -26,8 +27,14 @@ const burger = (props) => {
     )
 };
 
+const mapStateToProps = state => {
+    return {
+        ingredients: state.ingredients
+    }
+}
+
 // burger.PropTypes = {
 //
 // };
 
-export default burger;
+export default connect(mapStateToProps)(burger);
